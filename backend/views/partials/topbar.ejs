@@ -1,0 +1,91 @@
+<header class="admin-topbar">
+  <div class="topbar-left" style="display: flex; align-items: center; gap: 16px;">
+    <button id="sidebar-toggle" class="btn-icon" style="color: var(--text-main); display: none;">
+      <span class="material-symbols-rounded">menu</span>
+    </button>
+    <div style="font-weight: 500; color: var(--text-muted); font-size: 15px;">
+      <span style="color: var(--text-main); font-weight: 700;">لوحة التحكم</span>
+      <% if (typeof title !== 'undefined' && title !== 'لوحة التحكم') { %>
+        <span style="margin: 0 8px;">/</span>
+        <%= title %>
+      <% } %>
+    </div>
+  </div>
+  
+  <div class="topbar-right" style="display: flex; align-items: center; gap: 16px;">
+    
+    <!-- Theme Toggle -->
+    <button id="theme-toggle" class="btn-icon" style="color: var(--text-muted);" title="تبديل المظهر">
+      <span class="material-symbols-rounded">dark_mode</span>
+    </button>
+    
+    <!-- Search -->
+    <a href="/admin/products" class="btn-icon" style="color: var(--text-muted);" title="بحث عن المنتجات">
+      <span class="material-symbols-rounded">search</span>
+    </a>
+    
+    <!-- Mail -->
+    <a href="/admin/notifications" class="btn-icon" style="color: var(--text-muted);" title="الرسائل">
+      <span class="material-symbols-rounded">mail</span>
+    </a>
+
+    <!-- Notifications -->
+    <a href="/admin/notifications" class="btn-icon" style="color: var(--text-muted); position: relative;" title="الإشعارات">
+      <span class="material-symbols-rounded">notifications</span>
+      <span style="position: absolute; top: 0; right: 0; width: 10px; height: 10px; background: var(--danger); border-radius: 50%; border: 2px solid var(--bg-topbar);"></span>
+    </a>
+    
+    <!-- Profile Mini -->
+    <div style="width: 36px; height: 36px; border-radius: 50%; overflow: hidden; margin-right: 8px; border: 2px solid var(--primary-gold); cursor: pointer;">
+      <img src="https://ui-avatars.com/api/?name=<%= typeof admin !== 'undefined' ? admin.full_name : 'Admin' %>&background=eab308&color=000" style="width: 100%; height: 100%;" alt="Admin">
+    </div>
+
+  </div>
+</header>
+
+<% if (typeof flash !== 'undefined' && flash && flash.message) { %>
+  <div class="flash-message flash-<%= flash.type %>" style="margin: 24px auto 0; max-width: 1400px; width: calc(100% - 64px);">
+    <span class="material-symbols-rounded">info</span>
+    <%= flash.message %>
+  </div>
+<% } %>
+
+<script>
+  // Simple Theme Toggle Script
+  document.addEventListener('DOMContentLoaded', () => {
+    const toggle = document.getElementById('theme-toggle');
+    const icon = toggle.querySelector('.material-symbols-rounded');
+    
+    // Check saved theme
+    const savedTheme = localStorage.getItem('admin_theme') || 'dark';
+    if (savedTheme === 'light') {
+      document.documentElement.setAttribute('data-theme', 'light');
+      icon.textContent = 'light_mode';
+    }
+    
+    toggle.addEventListener('click', () => {
+      const currentTheme = document.documentElement.getAttribute('data-theme');
+      if (currentTheme === 'light') {
+        document.documentElement.removeAttribute('data-theme');
+        localStorage.setItem('admin_theme', 'dark');
+        icon.textContent = 'dark_mode';
+      } else {
+        document.documentElement.setAttribute('data-theme', 'light');
+        localStorage.setItem('admin_theme', 'light');
+        icon.textContent = 'light_mode';
+      }
+      
+      // Dispatch event for charts
+      window.dispatchEvent(new Event('themeChanged'));
+    });
+
+    // Mobile Sidebar Toggle
+    const sidebarToggle = document.getElementById('sidebar-toggle');
+    const sidebar = document.getElementById('adminSidebar');
+    if (sidebarToggle && sidebar) {
+      sidebarToggle.addEventListener('click', () => {
+        sidebar.classList.toggle('open');
+      });
+    }
+  });
+</script>

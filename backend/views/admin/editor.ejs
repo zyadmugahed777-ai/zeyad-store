@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %></title>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+  <style>
+    :root {
+      --sidebar-width: 350px;
+      --topbar-height: 60px;
+      --bg: #111827;
+      --bg-panel: #1f2937;
+      --text: #f9fafb;
+      --text-muted: #9ca3af;
+      --border: #374151;
+      --primary: #eab308;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'IBM Plex Sans Arabic', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+    }
+    .material-symbols-rounded {
+      font-family: 'Material Symbols Rounded', sans-serif;
+      font-weight: normal;
+      font-style: normal;
+      font-size: 24px;
+      line-height: 1;
+      display: inline-block;
+      white-space: nowrap;
+      word-wrap: normal;
+      direction: ltr;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Topbar */
+    .topbar {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: var(--topbar-height);
+      background: var(--bg-panel);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 20px;
+      z-index: 10;
+    }
+    .topbar-left { display: flex; align-items: center; gap: 15px; }
+    .topbar-right { display: flex; align-items: center; gap: 10px; }
+    
+    .btn {
+      background: var(--border);
+      color: var(--text);
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-family: inherit;
+      display: flex; align-items: center; gap: 8px;
+      font-size: 14px;
+    }
+    .btn-primary { background: var(--primary); color: #000; font-weight: 600; }
+    .btn:hover { opacity: 0.9; }
+
+    /* Layout */
+    .workspace {
+      margin-top: var(--topbar-height);
+      display: flex;
+      width: 100%;
+      height: calc(100vh - var(--topbar-height));
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: var(--sidebar-width);
+      background: var(--bg-panel);
+      border-left: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+    }
+    .sidebar-header {
+      padding: 15px;
+      border-bottom: 1px solid var(--border);
+      font-weight: 600;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .sidebar-content {
+      padding: 15px;
+      flex: 1;
+    }
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text-muted);
+    }
+    .empty-state .material-symbols-rounded { font-size: 48px; margin-bottom: 10px; opacity: 0.5; }
+
+    /* Forms */
+    .form-group { margin-bottom: 20px; }
+    .form-label { display: block; margin-bottom: 8px; font-size: 13px; color: var(--text-muted); }
+    .form-control {
+      width: 100%;
+      background: #111827;
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 10px;
+      border-radius: 6px;
+      font-family: inherit;
+      font-size: 14px;
+    }
+    textarea.form-control { resize: vertical; min-height: 100px; }
+    .form-control:focus { outline: none; border-color: var(--primary); }
+
+    /* Iframe Area */
+    .preview-area {
+      flex: 1;
+      background: #000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .iframe-wrapper {
+      width: 100%;
+      height: 100%;
+      background: #fff;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      transition: width 0.3s;
+    }
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+    .iframe-wrapper.mobile { width: 375px; }
+    .iframe-wrapper.tablet { width: 768px; }
+
+    .device-toggles { display: flex; gap: 5px; background: var(--bg); padding: 4px; border-radius: 8px; border: 1px solid var(--border); }
+    .device-btn { 
+      background: transparent; color: var(--text-muted); border: none; padding: 6px; border-radius: 4px; cursor: pointer;
+    }
+    .device-btn.active { background: var(--border); color: var(--text); }
+  </style>
+</head>
+<body>
+
+  <!-- Topbar -->
+  <div class="topbar">
+    <div class="topbar-left">
+      <a href="/admin/pages" class="btn"><span class="material-symbols-rounded">arrow_forward</span> خروج من المحرر</a>
+      <select id="pageSelector" class="form-control" style="width: auto;">
+        <% allPages.forEach(p => { %>
+          <option value="<%= p.id %>" <%= p.id === cmsPage.id ? 'selected' : '' %>><%= p.title_ar %> (<%= p.slug %>)</option>
+        <% }) %>
+      </select>
+    </div>
+    
+    <div class="device-toggles">
+      <button class="device-btn active" data-device="desktop"><span class="material-symbols-rounded">desktop_windows</span></button>
+      <button class="device-btn" data-device="tablet"><span class="material-symbols-rounded">tablet_mac</span></button>
+      <button class="device-btn" data-device="mobile"><span class="material-symbols-rounded">smartphone</span></button>
+    </div>
+
+    <div class="topbar-right" style="display: flex; gap: 10px;">
+      <button class="btn btn-secondary" id="undoBtn" style="background: rgba(255,255,255,0.05); color: #fff; border: 1px solid rgba(255,255,255,0.1);"><span class="material-symbols-rounded">undo</span> تراجع (Undo)</button>
+      <button class="btn btn-primary" id="saveBtn"><span class="material-symbols-rounded">save</span> حفظ التعديلات</button>
+    </div>
+  </div>
+
+  <div class="workspace">
+    <!-- Preview Area -->
+    <div class="preview-area">
+      <div class="iframe-wrapper" id="iframeWrapper">
+        <iframe id="previewIframe" src="<%= previewUrl %>"></iframe>
+      </div>
+    </div>
+
+    <!-- Sidebar Properties -->
+    <div class="sidebar">
+      <div class="sidebar-header">
+        <span>خصائص العنصر</span>
+        <span class="material-symbols-rounded" style="font-size: 18px; color: var(--text-muted);">settings</span>
+      </div>
+      
+      <div class="sidebar-content" id="propertiesPanel">
+        <div class="empty-state">
+          <span class="material-symbols-rounded">touch_app</span>
+          <p>اضغط على أي عنصر في الصفحة لتعديله</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const iframe = document.getElementById('previewIframe');
+    const iframeWrapper = document.getElementById('iframeWrapper');
+    const propertiesPanel = document.getElementById('propertiesPanel');
+    const pageSelector = document.getElementById('pageSelector');
+    let currentElement = null;
+    const PAGE_ID = <%= cmsPage.id %>;
+
+    // Handle Page Selection
+    pageSelector.addEventListener('change', (e) => {
+      window.location.href = `/admin/editor?page_id=${e.target.value}`;
+    });
+
+    // Handle Device Toggles
+    document.querySelectorAll('.device-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        document.querySelectorAll('.device-btn').forEach(b => b.classList.remove('active'));
+        e.currentTarget.classList.add('active');
+        iframeWrapper.className = 'iframe-wrapper ' + e.currentTarget.dataset.device;
+      });
+    });
+
+    function renderEmptyState() {
+      propertiesPanel.innerHTML = `
+        <div class="empty-state">
+          <span class="material-symbols-rounded">touch_app</span>
+          <p>اضغط على أي عنصر في الصفحة لتعديله</p>
+        </div>
+      `;
+    }
+
+    // Listen for messages from the iframe
+    window.addEventListener('message', (event) => {
+      const data = event.data;
+      if (data && data.type === 'ELEMENT_SELECTED') {
+        currentElement = data.payload;
+        renderProperties(data.payload);
+      }
+    });
+
+    function renderProperties(element) {
+      let html = `
+        <div style="margin-bottom: 20px; padding: 10px; background: #111827; border-radius: 6px; font-size: 12px; font-family: monospace;">
+          Key: ${element.vid} <br>
+          Tag: &lt;${element.tagName.toLowerCase()}&gt;
+        </div>
+      `;
+
+      // Always show text/content field
+      html += `
+        <div class="form-group">
+          <label class="form-label">النص أو المحتوى (Text/HTML)</label>
+          <textarea class="form-control" id="prop-value" style="min-height: 100px;">${element.tagName === 'IMG' ? element.src : (element.text || '')}</textarea>
+        </div>
+      `;
+
+      // Always show link if A
+      if (element.tagName === 'A') {
+        html += `
+          <div class="form-group">
+            <label class="form-label">الرابط (URL)</label>
+            <input type="text" class="form-control" id="prop-href" value="${element.href}">
+          </div>
+        `;
+      }
+
+      // Always show image upload (handles both src and background-image)
+      html += `
+        <hr style="border-color: #374151; margin: 20px 0;">
+        <div class="form-group">
+          <label class="form-label">صورة (Image / Background)</label>
+          <button class="btn btn-outline" style="width: 100%; justify-content: center; margin-bottom: 15px;" onclick="document.getElementById('cms-image-upload').click()">
+            <span class="material-symbols-rounded">cloud_upload</span> ${element.tagName === 'IMG' ? 'رفع صورة جديدة' : 'رفع كخلفية (Background)'}
+          </button>
+          <input type="file" id="cms-image-upload" style="display: none;" accept="image/*" onchange="uploadCmsImage(event, '${element.vid}', '${element.tagName === 'IMG' ? 'src' : 'bg-image'}')">
+        </div>
+      `;
+
+      propertiesPanel.innerHTML = html;
+
+      // Add real-time update listener
+      const input = document.getElementById('prop-value');
+      if (input) {
+        input.addEventListener('input', (e) => {
+          iframe.contentWindow.postMessage({
+            type: 'UPDATE_ELEMENT',
+            payload: {
+              vid: element.vid,
+              prop: element.tagName === 'IMG' ? 'src' : 'text',
+              value: e.target.value
+            }
+          }, '*');
+        });
+      }
+
+      const hrefInput = document.getElementById('prop-href');
+      if (hrefInput) {
+        hrefInput.addEventListener('input', (e) => {
+          iframe.contentWindow.postMessage({
+            type: 'UPDATE_ELEMENT',
+            payload: {
+              vid: element.vid,
+              prop: 'href',
+              value: e.target.value
+            }
+          }, '*');
+        });
+      }
+    }
+
+    // Save Changes
+    document.getElementById('saveBtn').addEventListener('click', async () => {
+      if (!currentElement) return alert('لم تقم بتعديل أي عنصر');
+      
+      const input = document.getElementById('prop-value');
+      const hrefInput = document.getElementById('prop-href');
+      
+      let value = input ? input.value : null;
+      let type = 'text';
+      
+      if (currentElement.tagName === 'IMG') {
+        type = 'image';
+      } else if (currentElement.tagName === 'A') {
+        type = 'link';
+        // For link we might want to save both href and text, usually we'd structure the content payload as JSON.
+        // For simplicity, if it's a link, we can just save the HTML snippet or JSON object.
+        value = JSON.stringify({ text: input.value, href: hrefInput ? hrefInput.value : '' });
+      }
+      
+      const btn = document.getElementById('saveBtn');
+      btn.innerHTML = '<span class="material-symbols-rounded">hourglass_empty</span> جاري الحفظ...';
+
+      try {
+        const res = await fetch('/admin/editor/save', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            page_id: PAGE_ID,
+            element_key: currentElement.vid,
+            content: value,
+            element_type: type
+          })
+        });
+        
+        const data = await res.json();
+        if (data.success) {
+          btn.innerHTML = '<span class="material-symbols-rounded">check</span> تم الحفظ';
+          setTimeout(() => {
+            btn.innerHTML = '<span class="material-symbols-rounded">save</span> حفظ التعديلات';
+          }, 2000);
+        } else {
+          alert('Error: ' + data.message);
+          btn.innerHTML = '<span class="material-symbols-rounded">save</span> حفظ التعديلات';
+        }
+      } catch (e) {
+        alert('Error: ' + e.message);
+        btn.innerHTML = '<span class="material-symbols-rounded">save</span> حفظ التعديلات';
+      }
+    });
+
+    // Undo Changes
+    document.getElementById('undoBtn').addEventListener('click', async () => {
+      if (!currentElement) return alert('يجب تحديد العنصر أولاً لاسترجاع آخر تعديل له');
+      
+      if (!confirm('هل أنت متأكد من استعادة آخر نسخة محفوظة لهذا العنصر؟')) return;
+      
+      const btn = document.getElementById('undoBtn');
+      const originalText = btn.innerHTML;
+      btn.innerHTML = '<span class="material-symbols-rounded">hourglass_empty</span>...';
+
+      try {
+        const res = await fetch('/admin/editor/undo', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ page_id: PAGE_ID, element_key: currentElement.vid })
+        });
+        
+        const data = await res.json();
+        if (data.success) {
+          iframe.contentWindow.location.reload();
+          btn.innerHTML = '<span class="material-symbols-rounded">check</span> تم الاسترجاع';
+          setTimeout(() => {
+            btn.innerHTML = originalText;
+          }, 2000);
+        } else {
+          alert('خطأ: ' + data.message);
+          btn.innerHTML = originalText;
+        }
+      } catch (e) {
+        alert('Error: ' + e.message);
+        btn.innerHTML = originalText;
+      }
+    });
+
+    // Upload CMS Image Function
+    async function uploadCmsImage(event, vid, prop = 'src') {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const btn = document.getElementById('cms-image-upload').previousElementSibling;
+      const originalHtml = btn.innerHTML;
+      btn.innerHTML = '<span class="material-symbols-rounded">hourglass_empty</span> جاري الرفع...';
+      btn.disabled = true;
+
+      const formData = new FormData();
+      formData.append('files', file);
+      formData.append('folder', 'cms');
+
+      try {
+        const res = await fetch('/admin/media/upload-ajax', {
+          method: 'POST',
+          headers: { 'X-CSRF-Token': window.ZFB_ADMIN_CSRF || '' },
+          body: formData
+        });
+        
+        const data = await res.json();
+        if (data.success && data.files && data.files.length > 0) {
+          const newUrl = data.files[0].path;
+          
+          // Update the input field if it's currently focused on this element
+          const input = document.getElementById('prop-value');
+          if (input && currentElement && currentElement.vid === vid) {
+            input.value = newUrl;
+          }
+
+          // Dispatch update to iframe
+          iframe.contentWindow.postMessage({
+            type: 'UPDATE_ELEMENT',
+            payload: {
+              vid: vid,
+              prop: prop,
+              value: newUrl
+            }
+          }, '*');
+
+          btn.innerHTML = '<span class="material-symbols-rounded">check</span> تم الرفع بنجاح';
+          setTimeout(() => {
+            btn.innerHTML = originalHtml;
+            btn.disabled = false;
+          }, 2000);
+        } else {
+          alert('فشل الرفع: ' + (data.message || 'خطأ غير معروف'));
+          btn.innerHTML = originalHtml;
+          btn.disabled = false;
+        }
+      } catch (err) {
+        console.error(err);
+        alert('حدث خطأ أثناء الاتصال بالخادم.');
+        btn.innerHTML = originalHtml;
+        btn.disabled = false;
+      }
+    }
+
+  </script>
+  <script src="/search-manager.js"></script>\n  <script src="/wishlist-manager.js"></script>\n</body>
+</html>

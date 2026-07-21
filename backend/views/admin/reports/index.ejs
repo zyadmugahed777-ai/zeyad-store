@@ -1,0 +1,131 @@
+<%- include('../../partials/head', { title }) %>
+<%- include('../../partials/sidebar', { active }) %>
+<main class="admin-main">
+  <%- include('../../partials/topbar') %>
+  <div class="admin-content">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <div>
+        <h1 class="page-title"><%= title %></h1>
+        <p class="text-muted mt-2" style="font-size: 13px;">تتبع أداء المبيعات والمنتجات وحالات الطلبات في متجرك.</p>
+      </div>
+      <div class="admin-header-actions">
+        <button class="btn btn-outline" onclick="window.print()">
+          <span class="material-symbols-rounded">print</span>
+          طباعة التقرير
+        </button>
+      </div>
+    </div>
+
+    <!-- Quick Stats for Reports -->
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-bottom: 24px;">
+      <% 
+        let totalOrdersReport = 0;
+        let totalRevenueReport = 0;
+        statusCounts.forEach(s => totalOrdersReport += s.count);
+        topProducts.forEach(p => totalRevenueReport += p.revenue);
+      %>
+      <div class="glass-card" style="display: flex; flex-direction: column; justify-content: center; position: relative; padding: 24px;">
+        <div style="position: absolute; top: 24px; right: 24px; width: 44px; height: 44px; border-radius: 12px; background: rgba(59, 130, 246, 0.1); display: flex; align-items: center; justify-content: center; color: #3b82f6;">
+          <span class="material-symbols-rounded">show_chart</span>
+        </div>
+        <div style="font-size: 14px; color: var(--text-muted); margin-bottom: 12px;">إجمالي المبيعات (أفضل المنتجات)</div>
+        <div style="font-size: 28px; font-weight: 700; color: var(--text-main); font-family: sans-serif;" dir="ltr"><%= helpers.formatPrice(totalRevenueReport) %></div>
+      </div>
+
+      <div class="glass-card" style="display: flex; flex-direction: column; justify-content: center; position: relative; padding: 24px;">
+        <div style="position: absolute; top: 24px; right: 24px; width: 44px; height: 44px; border-radius: 12px; background: rgba(16, 185, 129, 0.1); display: flex; align-items: center; justify-content: center; color: #10b981;">
+          <span class="material-symbols-rounded">shopping_bag</span>
+        </div>
+        <div style="font-size: 14px; color: var(--text-muted); margin-bottom: 12px;">إجمالي الطلبات المستلمة</div>
+        <div style="font-size: 28px; font-weight: 700; color: var(--text-main); font-family: sans-serif;"><%= totalOrdersReport %></div>
+      </div>
+
+      <div class="glass-card" style="display: flex; flex-direction: column; justify-content: center; position: relative; padding: 24px;">
+        <div style="position: absolute; top: 24px; right: 24px; width: 44px; height: 44px; border-radius: 12px; background: rgba(234, 179, 8, 0.1); display: flex; align-items: center; justify-content: center; color: #eab308;">
+          <span class="material-symbols-rounded">inventory_2</span>
+        </div>
+        <div style="font-size: 14px; color: var(--text-muted); margin-bottom: 12px;">المنتجات المباعة</div>
+        <div style="font-size: 28px; font-weight: 700; color: var(--text-main); font-family: sans-serif;"><%= topProducts.length %></div>
+      </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 24px;">
+      
+      <!-- Orders By Status -->
+      <div class="glass-card p-0">
+        <div class="card-header" style="padding: 24px; border-bottom: 1px solid var(--border-color); margin: 0;">
+          <h2 style="font-size: 16px;">إحصائيات الطلبات بالحالة</h2>
+        </div>
+        <div class="table-responsive">
+          <table class="admin-table" style="font-size: 13px;">
+            <thead>
+              <tr>
+                <th>الحالة</th>
+                <th class="text-center">العدد</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if (statusCounts.length === 0) { %>
+                <tr><td colspan="2" class="text-center py-4 text-muted">لا توجد إحصائيات</td></tr>
+              <% } %>
+              <% statusCounts.forEach(s => { %>
+                <tr>
+                  <td>
+                    <span style="color: <%= helpers.statusColor(s.status) %>; background: <%= helpers.statusColor(s.status).replace('rgb', 'rgba').replace(')', ', 0.1)') %>; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 600;">
+                      <%= helpers.statusLabel(s.status) %>
+                    </span>
+                  </td>
+                  <td class="text-center"><strong style="font-size: 16px; font-family: sans-serif;"><%= s.count %></strong></td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      
+      <!-- Top Products -->
+      <div class="glass-card p-0">
+        <div class="card-header" style="padding: 24px; border-bottom: 1px solid var(--border-color); margin: 0;">
+          <h2 style="font-size: 16px;">المنتجات الأكثر مبيعاً (Top 10)</h2>
+        </div>
+        <div class="table-responsive">
+          <table class="admin-table" style="font-size: 13px;">
+            <thead>
+              <tr>
+                <th>المنتج</th>
+                <th class="text-center">الكمية المباعة</th>
+                <th class="text-center">الإيرادات</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if (topProducts.length === 0) { %>
+                <tr><td colspan="3" class="text-center py-4 text-muted">لا توجد بيانات للمبيعات حتى الآن</td></tr>
+              <% } %>
+              <% topProducts.forEach((p, index) => { %>
+                <tr>
+                  <td>
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                      <div style="width: 28px; height: 28px; background: <%= index < 3 ? 'rgba(234, 179, 8, 0.1)' : 'var(--bg-tertiary)' %>; color: <%= index < 3 ? 'var(--primary-gold)' : 'var(--text-muted)' %>; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-family: sans-serif; font-size: 12px;">
+                        <%= index + 1 %>
+                      </div>
+                      <strong style="color: var(--text-main); font-weight: 500;"><%= p.product_title %></strong>
+                    </div>
+                  </td>
+                  <td class="text-center">
+                    <span style="background: rgba(59, 130, 246, 0.1); color: #3b82f6; padding: 4px 12px; border-radius: 20px; font-weight: 600; font-family: sans-serif;"><%= p.qty %></span>
+                  </td>
+                  <td class="text-center">
+                    <strong style="font-family: sans-serif; color: var(--success);" dir="ltr"><%= helpers.formatPrice(p.revenue) %></strong>
+                  </td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</main>
+  <script src="/search-manager.js"></script>\n  <script src="/wishlist-manager.js"></script>\n</body>
+</html>

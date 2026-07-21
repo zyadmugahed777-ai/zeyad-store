@@ -1,0 +1,391 @@
+<%- include('../partials/head', { title }) %>
+<%- include('../partials/sidebar', { active }) %>
+<main class="admin-main">
+  <%- include('../partials/topbar') %>
+  
+  <div class="admin-content">
+    
+    <!-- Top Stats -->
+    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-bottom: 24px;">
+      
+      <!-- Total Orders -->
+      <div class="glass-card" style="display: flex; flex-direction: column; justify-content: center; position: relative;">
+        <div style="position: absolute; top: 24px; right: 24px; width: 44px; height: 44px; border-radius: 12px; background: rgba(16, 185, 129, 0.1); display: flex; align-items: center; justify-content: center; color: #10b981;">
+          <span class="material-symbols-rounded">shopping_bag</span>
+        </div>
+        <div style="font-size: 14px; color: var(--text-muted); margin-bottom: 12px;">إجمالي الطلبات</div>
+        <div style="font-size: 28px; font-weight: 700; color: var(--text-main); margin-bottom: 8px; font-family: sans-serif;"><%= stats.ordersCount %></div>
+        <div style="font-size: 12px; color: var(--success); display: flex; align-items: center; gap: 4px; font-weight: 500;">
+          <span class="material-symbols-rounded" style="font-size: 16px;">trending_up</span>
+          +12.5% <span style="color: var(--text-muted); font-weight: 400; margin-right: 4px;">عن الشهر الماضي</span>
+        </div>
+      </div>
+      
+      <!-- Total Sales -->
+      <div class="glass-card" style="display: flex; flex-direction: column; justify-content: center; position: relative;">
+        <div style="position: absolute; top: 24px; right: 24px; width: 44px; height: 44px; border-radius: 12px; background: rgba(59, 130, 246, 0.1); display: flex; align-items: center; justify-content: center; color: #3b82f6;">
+          <span class="material-symbols-rounded">payments</span>
+        </div>
+        <div style="font-size: 14px; color: var(--text-muted); margin-bottom: 12px;">إجمالي المبيعات</div>
+        <div style="font-size: 28px; font-weight: 700; color: var(--text-main); margin-bottom: 8px; font-family: sans-serif;" dir="ltr"><%= helpers.formatPrice(stats.totalSales) %></div>
+        <div style="font-size: 12px; color: var(--success); display: flex; align-items: center; gap: 4px; font-weight: 500;">
+          <span class="material-symbols-rounded" style="font-size: 16px;">trending_up</span>
+          +8.3% <span style="color: var(--text-muted); font-weight: 400; margin-right: 4px;">عن الشهر الماضي</span>
+        </div>
+      </div>
+      
+      <!-- Customers -->
+      <div class="glass-card" style="display: flex; flex-direction: column; justify-content: center; position: relative;">
+        <div style="position: absolute; top: 24px; right: 24px; width: 44px; height: 44px; border-radius: 12px; background: rgba(139, 92, 246, 0.1); display: flex; align-items: center; justify-content: center; color: #8b5cf6;">
+          <span class="material-symbols-rounded">group</span>
+        </div>
+        <div style="font-size: 14px; color: var(--text-muted); margin-bottom: 12px;">العملاء الجدد</div>
+        <div style="font-size: 28px; font-weight: 700; color: var(--text-main); margin-bottom: 8px; font-family: sans-serif;"><%= stats.customersCount %></div>
+        <div style="font-size: 12px; color: var(--success); display: flex; align-items: center; gap: 4px; font-weight: 500;">
+          <span class="material-symbols-rounded" style="font-size: 16px;">trending_up</span>
+          +15.7% <span style="color: var(--text-muted); font-weight: 400; margin-right: 4px;">عن الشهر الماضي</span>
+        </div>
+      </div>
+
+      <!-- Products -->
+      <div class="glass-card" style="display: flex; flex-direction: column; justify-content: center; position: relative;">
+        <div style="position: absolute; top: 24px; right: 24px; width: 44px; height: 44px; border-radius: 12px; background: rgba(234, 179, 8, 0.1); display: flex; align-items: center; justify-content: center; color: #eab308;">
+          <span class="material-symbols-rounded">inventory_2</span>
+        </div>
+        <div style="font-size: 14px; color: var(--text-muted); margin-bottom: 12px;">المنتجات</div>
+        <div style="font-size: 28px; font-weight: 700; color: var(--text-main); margin-bottom: 8px; font-family: sans-serif;"><%= stats.productsCount %></div>
+        <div style="font-size: 12px; color: var(--success); display: flex; align-items: center; gap: 4px; font-weight: 500;">
+          <span class="material-symbols-rounded" style="font-size: 16px;">trending_up</span>
+          +5 <span style="color: var(--text-muted); font-weight: 400; margin-right: 4px;">عن الشهر الماضي</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Charts Row -->
+    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 24px; margin-bottom: 24px;">
+      
+      <!-- Sales Chart -->
+      <div class="glass-card">
+        <div class="card-header" style="border: none; padding-bottom: 10px;">
+          <h2 style="font-size: 16px;">المبيعات خلال آخر 30 يوم</h2>
+          <select class="form-control" style="width: 140px; padding: 6px 12px; font-size: 12px; border-radius: 8px; height: auto;">
+            <option>آخر 30 يوم</option>
+            <option>الشهر الحالي</option>
+          </select>
+        </div>
+        <div style="height: 300px; width: 100%;">
+          <canvas id="salesChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Status Doughnut Chart -->
+      <div class="glass-card">
+        <h2 style="font-size: 16px; margin-bottom: 30px;">توزيع الطلبات حسب الحالة</h2>
+        <div style="position: relative; height: 260px; display: flex; justify-content: center; align-items: center;">
+          <canvas id="statusChart"></canvas>
+          <div style="position: absolute; text-align: center;">
+            <div style="font-size: 28px; font-weight: bold; color: var(--text-main); font-family: sans-serif;"><%= stats.ordersCount %></div>
+            <div style="font-size: 12px; color: var(--text-muted);">إجمالي الطلبات</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Row -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px;">
+      
+      <!-- Quick Stats -->
+      <div class="glass-card">
+        <h2 style="font-size: 16px; margin-bottom: 24px;">إحصائيات سريعة</h2>
+        <div style="display: flex; flex-direction: column; gap: 20px;">
+          
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <div style="width: 36px; height: 36px; background: rgba(59, 130, 246, 0.1); color: #3b82f6; border-radius: 8px; display: flex; align-items: center; justify-content: center;"><span class="material-symbols-rounded" style="font-size: 18px;">inventory_2</span></div>
+              <span style="font-size: 13px; color: var(--text-main);">إجمالي المنتجات</span>
+            </div>
+            <span style="font-weight: 600; font-family: sans-serif;"><%= stats.productsCount %></span>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <div style="width: 36px; height: 36px; background: rgba(139, 92, 246, 0.1); color: #8b5cf6; border-radius: 8px; display: flex; align-items: center; justify-content: center;"><span class="material-symbols-rounded" style="font-size: 18px;">group</span></div>
+              <span style="font-size: 13px; color: var(--text-main);">إجمالي العملاء</span>
+            </div>
+            <span style="font-weight: 600; font-family: sans-serif;"><%= stats.customersCount %></span>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <div style="width: 36px; height: 36px; background: rgba(234, 179, 8, 0.1); color: #eab308; border-radius: 8px; display: flex; align-items: center; justify-content: center;"><span class="material-symbols-rounded" style="font-size: 18px;">shopping_cart</span></div>
+              <span style="font-size: 13px; color: var(--text-main);">إجمالي الطلبات</span>
+            </div>
+            <span style="font-weight: 600; font-family: sans-serif;"><%= stats.ordersCount %></span>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <div style="width: 36px; height: 36px; background: rgba(245, 158, 11, 0.1); color: #f59e0b; border-radius: 8px; display: flex; align-items: center; justify-content: center;"><span class="material-symbols-rounded" style="font-size: 18px;">calendar_month</span></div>
+              <span style="font-size: 13px; color: var(--text-main);">الطلبات هذا الشهر</span>
+            </div>
+            <span style="font-weight: 600; font-family: sans-serif;"><%= Math.floor(stats.ordersCount * 0.4) %></span>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <div style="width: 36px; height: 36px; background: rgba(16, 185, 129, 0.1); color: #10b981; border-radius: 8px; display: flex; align-items: center; justify-content: center;"><span class="material-symbols-rounded" style="font-size: 18px;">attach_money</span></div>
+              <span style="font-size: 13px; color: var(--text-main);">إجمالي المبيعات</span>
+            </div>
+            <span style="font-weight: 600; font-family: sans-serif;" dir="ltr"><%= helpers.formatPrice(stats.totalSales) %></span>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <div style="width: 36px; height: 36px; background: rgba(236, 72, 153, 0.1); color: #ec4899; border-radius: 8px; display: flex; align-items: center; justify-content: center;"><span class="material-symbols-rounded" style="font-size: 18px;">show_chart</span></div>
+              <span style="font-size: 13px; color: var(--text-main);">متوسط قيمة الطلب</span>
+            </div>
+            <span style="font-weight: 600; font-family: sans-serif;" dir="ltr"><%= stats.ordersCount > 0 ? helpers.formatPrice(stats.totalSales / stats.ordersCount) : '0 رس' %></span>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Recent Orders Table -->
+      <div class="glass-card" style="padding: 0;">
+        <div class="card-header" style="padding: 24px; border-bottom: 1px solid var(--border-color); margin: 0;">
+          <h2 style="font-size: 16px;">الطلبات الأخيرة</h2>
+        </div>
+        <div class="table-responsive">
+          <table class="admin-table" style="font-size: 13px;">
+            <thead style="display: none;">
+              <tr>
+                <th>الطلب</th>
+                <th>العميل</th>
+                <th>المبلغ</th>
+                <th>الحالة</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if(!recentOrders || recentOrders.length === 0) { %>
+                <tr><td colspan="4" class="text-center py-4">لا توجد طلبات حديثة</td></tr>
+              <% } %>
+              <% if(recentOrders) recentOrders.slice(0, 5).forEach(o => { %>
+                <tr>
+                  <td dir="ltr" style="font-weight: 600;"><a href="/admin/orders/<%= o.id %>" style="color: var(--text-main); text-decoration: none;"><%= o.order_id %></a></td>
+                  <td>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                      <div style="width: 24px; height: 24px; border-radius: 50%; background: var(--bg-tertiary); overflow: hidden;">
+                        <img src="https://ui-avatars.com/api/?name=<%= o.first_name %>&background=random" style="width: 100%;">
+                      </div>
+                      <%= o.first_name %>
+                    </div>
+                  </td>
+                  <td dir="ltr" style="font-family: sans-serif; font-weight: 500;"><%= helpers.formatPrice(o.total) %></td>
+                  <td class="text-center" style="padding-left: 24px;">
+                    <span style="color: <%= helpers.statusColor(o.status) %>; background: <%= helpers.statusColor(o.status).replace('rgb', 'rgba').replace(')', ', 0.1)') %>; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 600;">
+                      <%= helpers.statusLabel(o.status) %>
+                    </span>
+                  </td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+        <div style="padding: 16px; text-align: center; border-top: 1px solid var(--border-color);">
+          <a href="/admin/orders" style="color: var(--info); font-size: 13px; display: inline-flex; align-items: center; gap: 4px; text-decoration: none;">
+            عرض جميع الطلبات <span class="material-symbols-rounded" style="font-size: 16px; transform: scaleX(-1);">arrow_forward</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Top Products -->
+      <div class="glass-card" style="padding: 0;">
+        <div class="card-header" style="padding: 24px; border-bottom: 1px solid var(--border-color); margin: 0;">
+          <h2 style="font-size: 16px;">المنتجات الأكثر مبيعاً</h2>
+        </div>
+        <div class="table-responsive">
+          <table class="admin-table" style="font-size: 13px;">
+            <thead style="display: none;">
+              <tr>
+                <th>المنتج</th>
+                <th>المبيعات</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if(!topProducts || topProducts.length === 0) { %>
+                <tr><td colspan="2" class="text-center py-4 text-muted">لا توجد مبيعات بعد</td></tr>
+              <% } %>
+              <% if(topProducts) topProducts.slice(0, 5).forEach(p => { %>
+                <tr>
+                  <td>
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                      <div style="width: 40px; height: 40px; background: var(--bg-tertiary); border-radius: 6px; display: flex; align-items: center; justify-content: center; color: var(--text-muted); flex-shrink: 0;">
+                        <span class="material-symbols-rounded" style="font-size: 20px;">inventory_2</span>
+                      </div>
+                      <div style="font-weight: 500; max-width: 180px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text-main);"><%= p.product_title %></div>
+                    </div>
+                  </td>
+                  <td class="text-left" style="padding-left: 24px;">
+                    <span style="font-weight: 600; font-family: sans-serif;"><%= p.qty %></span>
+                  </td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+        <div style="padding: 16px; text-align: center; border-top: 1px solid var(--border-color);">
+          <a href="/admin/products" style="color: var(--primary-gold); font-size: 13px; display: inline-flex; align-items: center; gap: 4px; text-decoration: none;">
+            عرض جميع المنتجات <span class="material-symbols-rounded" style="font-size: 16px; transform: scaleX(-1);">arrow_forward</span>
+          </a>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const statusData = <%- typeof chartStatusData !== 'undefined' ? chartStatusData : '{}' %>;
+    const salesData = <%- typeof chartSalesData !== 'undefined' ? chartSalesData : '{}' %>;
+    
+    if (!statusData.labels || !salesData.labels) return;
+
+    const getThemeColors = () => {
+      const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
+      return {
+        grid: isDark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)',
+        text: isDark ? '#9ca3af' : '#64748b',
+        goldLine: '#eab308',
+        goldFill: isDark ? 'rgba(234, 179, 8, 0.1)' : 'rgba(234, 179, 8, 0.2)'
+      };
+    };
+
+    let salesChartObj, statusChartObj;
+
+    function initCharts() {
+      const colors = getThemeColors();
+
+      // 1. Sales Line Chart
+      const salesCanvas = document.getElementById('salesChart');
+      if (salesCanvas) {
+        const ctxSales = salesCanvas.getContext('2d');
+        if (salesChartObj) salesChartObj.destroy();
+        
+        const gradient = ctxSales.createLinearGradient(0, 0, 0, 300);
+        gradient.addColorStop(0, colors.goldFill);
+        gradient.addColorStop(1, 'rgba(234, 179, 8, 0)');
+
+        salesChartObj = new Chart(ctxSales, {
+          type: 'line',
+          data: {
+            labels: salesData.labels,
+            datasets: [{
+              label: 'المبيعات',
+              data: salesData.data,
+              borderColor: colors.goldLine,
+              backgroundColor: gradient,
+              borderWidth: 2,
+              pointBackgroundColor: colors.goldLine,
+              pointBorderColor: '#fff',
+              pointBorderWidth: 2,
+              pointRadius: 4,
+              pointHoverRadius: 6,
+              fill: true,
+              tension: 0.4
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                mode: 'index',
+                intersect: false,
+                backgroundColor: 'rgba(0,0,0,0.8)',
+                titleFont: { family: 'IBM Plex Sans Arabic' },
+                bodyFont: { family: 'IBM Plex Sans Arabic' }
+              }
+            },
+            scales: {
+              y: {
+                beginAtZero: true,
+                grid: { color: colors.grid, drawBorder: false },
+                ticks: { color: colors.text, font: { family: 'IBM Plex Sans Arabic' } }
+              },
+              x: {
+                grid: { display: false },
+                ticks: { color: colors.text, font: { family: 'IBM Plex Sans Arabic' }, maxTicksLimit: 8 }
+              }
+            },
+            interaction: { mode: 'nearest', axis: 'x', intersect: false }
+          }
+        });
+      }
+
+      // 2. Status Doughnut Chart
+      const statusCanvas = document.getElementById('statusChart');
+      if (statusCanvas) {
+        const ctxStatus = statusCanvas.getContext('2d');
+        if (statusChartObj) statusChartObj.destroy();
+
+        const statusLabelsAr = statusData.labels.map(l => {
+          const map = {
+            'pending': 'قيد الانتظار',
+            'confirmed': 'تم التأكيد',
+            'processing': 'قيد التجهيز',
+            'shipped': 'قيد الشحن',
+            'delivered': 'مكتمل',
+            'cancelled': 'ملغي'
+          };
+          return map[l] || l;
+        });
+
+        statusChartObj = new Chart(ctxStatus, {
+          type: 'doughnut',
+          data: {
+            labels: statusLabelsAr,
+            datasets: [{
+              data: statusData.data,
+              backgroundColor: statusData.colors,
+              borderWidth: 0,
+              cutout: '75%'
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                position: 'left',
+                labels: {
+                  color: colors.text,
+                  usePointStyle: true,
+                  pointStyle: 'circle',
+                  padding: 20,
+                  font: { family: 'IBM Plex Sans Arabic', size: 12 }
+                }
+              },
+              tooltip: {
+                titleFont: { family: 'IBM Plex Sans Arabic' },
+                bodyFont: { family: 'IBM Plex Sans Arabic' }
+              }
+            }
+          }
+        });
+      }
+    }
+
+    initCharts();
+
+    window.addEventListener('themeChanged', () => {
+      initCharts();
+    });
+  });
+</script>
+  <script src="/search-manager.js"></script>\n  <script src="/wishlist-manager.js"></script>\n</body>
+</html>

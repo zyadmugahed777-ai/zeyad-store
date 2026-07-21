@@ -1,0 +1,395 @@
+<%- include('../../partials/head', { title }) %>
+<%- include('../../partials/sidebar', { active }) %>
+<main class="admin-main">
+  <%- include('../../partials/topbar') %>
+  
+  <div class="admin-content">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <div>
+        <h1 class="page-title"><%= title %></h1>
+      </div>
+      <div class="admin-header-actions">
+        <a href="/admin/products" class="btn btn-outline">
+          <span class="material-symbols-rounded">arrow_forward</span>
+          العودة للقائمة
+        </a>
+      </div>
+    </div>
+
+    <form action="<%= product ? '/admin/products/' + product.id + '/edit' : '/admin/products/create' %>" method="POST" enctype="multipart/form-data">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      
+      <div class="row" style="display: flex; flex-wrap: wrap; margin: -12px;">
+        
+        <!-- MAIN CONTENT (Left Column) -->
+        <div style="flex: 0 0 66.66%; padding: 12px; box-sizing: border-box;">
+          
+          <!-- Basic Info -->
+          <div class="glass-card mb-4">
+            <h2 style="font-size: 1.1rem; margin-bottom: 20px; color: var(--primary-color);">المعلومات الأساسية</h2>
+            
+            <div class="form-group">
+              <label class="form-label">اسم المنتج <span class="text-danger">*</span></label>
+              <input type="text" name="title" class="form-control" value="<%= product ? product.title : '' %>" required>
+            </div>
+            
+            <div class="form-group mt-3">
+              <label class="form-label">وصف قصير (SEO / مقتطف)</label>
+              <textarea name="short_description" class="form-control" rows="2"><%= product ? product.short_description : '' %></textarea>
+            </div>
+
+            <div class="form-group mt-3">
+              <label class="form-label">الوصف الكامل التفصيلي</label>
+              <textarea name="description" class="form-control rich-editor" rows="6"><%= product ? product.description : '' %></textarea>
+            </div>
+          </div>
+
+          <!-- Pricing & Inventory -->
+          <div class="glass-card mb-4">
+            <h2 style="font-size: 1.1rem; margin-bottom: 20px; color: var(--primary-color);">التسعير والمخزون</h2>
+            
+            <div class="row" style="display: flex; flex-wrap: wrap; margin: 0 -8px;">
+              <div style="flex: 0 0 50%; padding: 0 8px; box-sizing: border-box;">
+                <label class="form-label">السعر الحالي <span class="text-danger">*</span></label>
+                <input type="number" step="0.01" name="price" class="form-control" value="<%= product ? product.price : '0' %>" required dir="ltr">
+              </div>
+              <div style="flex: 0 0 50%; padding: 0 8px; box-sizing: border-box;">
+                <label class="form-label">السعر القديم (قبل الخصم)</label>
+                <input type="number" step="0.01" name="old_price" class="form-control" value="<%= product && product.old_price ? product.old_price : '' %>" dir="ltr">
+              </div>
+            </div>
+
+            <div class="row mt-3" style="display: flex; flex-wrap: wrap; margin: 0 -8px;">
+              <div style="flex: 0 0 33.33%; padding: 0 8px; box-sizing: border-box;">
+                <label class="form-label">رمز المنتج (SKU)</label>
+                <input type="text" name="sku" class="form-control" value="<%= product ? product.sku : '' %>" dir="ltr">
+              </div>
+              <div style="flex: 0 0 33.33%; padding: 0 8px; box-sizing: border-box;">
+                <label class="form-label">الباركود (Barcode)</label>
+                <input type="text" name="barcode" class="form-control" value="<%= product ? product.barcode : '' %>" dir="ltr">
+              </div>
+              <div style="flex: 0 0 33.33%; padding: 0 8px; box-sizing: border-box;">
+                <label class="form-label">حالة المخزون</label>
+                <select name="stock_status" class="form-control">
+                  <option value="in_stock" <%= product && product.stock_status === 'in_stock' ? 'selected' : '' %>>متوفر</option>
+                  <option value="out_of_stock" <%= product && product.stock_status === 'out_of_stock' ? 'selected' : '' %>>نفذت الكمية</option>
+                  <option value="pre_order" <%= product && product.stock_status === 'pre_order' ? 'selected' : '' %>>طلب مسبق</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Images -->
+          <div class="glass-card mb-4">
+            <h2 style="font-size: 1.1rem; margin-bottom: 20px; color: var(--primary-color);">الصور والوسائط</h2>
+            
+            <div class="form-group">
+              <label class="form-label">إضافة صور جديدة (حتى 10 صور)</label>
+              <input type="file" name="images" class="form-control" accept="image/*" multiple>
+              <small class="text-muted d-block mt-1">سيتم تحويل الصور تلقائياً إلى صيغة WebP لتسريع الموقع</small>
+            </div>
+            
+            <div class="form-group mt-3">
+              <label class="form-label">رابط فيديو يوتيوب (اختياري)</label>
+              <input type="text" name="video" class="form-control" value="<%= product ? product.video : '' %>" dir="ltr" placeholder="https://youtube.com/...">
+            </div>
+
+            <% if (product && images && images.length > 0) { %>
+              <div class="mt-4 pt-3" style="border-top: 1px solid var(--border);">
+                <label class="form-label mb-2">الصور الحالية (حدد للحذف)</label>
+                <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                  <% images.forEach(img => { %>
+                    <div style="position: relative; border-radius: 8px; overflow: hidden; border: 1px solid var(--border-color); width: 100px; height: 100px;">
+                      <img src="<%= img.image_path %>" style="width: 100%; height: 100%; object-fit: cover;">
+                      <label style="position: absolute; top: 5px; right: 5px; background: rgba(0,0,0,0.7); border-radius: 4px; padding: 2px 5px; cursor: pointer;">
+                        <input type="checkbox" name="delete_images[]" value="<%= img.id %>">
+                        <span class="material-symbols-rounded" style="font-size: 14px; color: #ff4444; vertical-align: middle;">delete</span>
+                      </label>
+                    </div>
+                  <% }) %>
+                </div>
+              </div>
+            <% } %>
+          </div>
+
+          <!-- Shipping & SEO -->
+          <div class="glass-card mb-4">
+            <h2 style="font-size: 1.1rem; margin-bottom: 20px; color: var(--primary-color);">معلومات إضافية والتوصيل</h2>
+            
+            <div class="row" style="display: flex; flex-wrap: wrap; margin: 0 -8px;">
+              <div style="flex: 0 0 50%; padding: 0 8px; box-sizing: border-box;">
+                <label class="form-label">العلامة التجارية (Brand)</label>
+                <input type="text" name="brand" class="form-control" value="<%= product ? product.brand : '' %>">
+              </div>
+              <div style="flex: 0 0 50%; padding: 0 8px; box-sizing: border-box;">
+                <label class="form-label">بلد المنشأ (Origin)</label>
+                <input type="text" name="origin" class="form-control" value="<%= product ? product.origin : '' %>">
+              </div>
+            </div>
+
+            <div class="row mt-3" style="display: flex; flex-wrap: wrap; margin: 0 -8px;">
+              <div style="flex: 0 0 33.33%; padding: 0 8px; box-sizing: border-box;">
+                <label class="form-label">الضمان (Warranty)</label>
+                <input type="text" name="warranty" class="form-control" value="<%= product ? product.warranty : '' %>" placeholder="مثال: سنتين">
+              </div>
+              <div style="flex: 0 0 33.33%; padding: 0 8px; box-sizing: border-box;">
+                <label class="form-label">الوزن الكلي (كجم)</label>
+                <input type="number" step="0.01" name="weight" class="form-control" value="<%= product ? product.weight : '' %>" dir="ltr">
+              </div>
+              <div style="flex: 0 0 33.33%; padding: 0 8px; box-sizing: border-box;">
+                <label class="form-label">مدة التوصيل</label>
+                <input type="text" name="delivery_time" class="form-control" value="<%= product ? product.delivery_time : '' %>" placeholder="مثال: 3 - 5 أيام">
+              </div>
+            </div>
+
+            <div class="form-group mt-3">
+              <label class="form-label">الكلمات المفتاحية SEO (Tags)</label>
+              <input type="text" name="tags" class="form-control" value="<%= product ? product.tags : '' %>" placeholder="افصل بين الكلمات بفاصلة (, )">
+            </div>
+          </div>
+
+        </div>
+
+        <!-- SIDEBAR (Right Column) -->
+        <div style="flex: 0 0 33.33%; padding: 12px; box-sizing: border-box;">
+
+          <!-- Live Preview Card -->
+          <div class="glass-card mb-4" style="background: var(--bg-body);">
+            <h2 style="font-size: 1.1rem; margin-bottom: 20px; color: var(--primary-color);">معاينة حية للمنتج (Live Preview)</h2>
+            
+            <div style="background: var(--bg-card); border-radius: 12px; overflow: hidden; border: 1px solid var(--border-color); box-shadow: var(--shadow-sm); display: flex; flex-direction: column; max-width: 300px; margin: 0 auto;">
+              <!-- Image Placeholder -->
+              <div style="width: 100%; aspect-ratio: 4/5; background: #eee; position: relative; overflow: hidden;" id="preview_image_container">
+                <% if (product && images && images.length > 0) { %>
+                  <img id="preview_image" src="<%= images[0].image_path %>" style="width: 100%; height: 100%; object-fit: cover;">
+                <% } else { %>
+                  <img id="preview_image" src="https://via.placeholder.com/400x500?text=Product+Image" style="width: 100%; height: 100%; object-fit: cover;">
+                <% } %>
+                
+                <!-- Badges -->
+                <div style="position: absolute; top: 10px; right: 10px; display: flex; flex-direction: column; gap: 5px;">
+                  <span id="preview_badge_new" style="background: var(--primary-gold); color: #000; font-size: 11px; font-weight: bold; padding: 4px 8px; border-radius: 4px; display: none;">جديد</span>
+                  <span id="preview_badge_best" style="background: #111; color: #fff; font-size: 11px; font-weight: bold; padding: 4px 8px; border-radius: 4px; display: none;">الأكثر مبيعاً</span>
+                </div>
+              </div>
+              
+              <!-- Content Placeholder -->
+              <div style="padding: 15px; text-align: right;">
+                <h3 id="preview_title" style="font-size: 16px; font-weight: 600; margin-bottom: 8px; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">اسم المنتج</h3>
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-direction: row-reverse;">
+                  <div style="display: flex; flex-direction: column; align-items: flex-end;">
+                    <span id="preview_price" style="font-size: 18px; font-weight: 700; color: var(--text-main);">0 ر.س</span>
+                    <span id="preview_old_price" style="font-size: 13px; color: var(--text-muted); text-decoration: line-through; display: none;"></span>
+                  </div>
+                  <button type="button" class="btn-primary" style="padding: 6px 12px; font-size: 13px; border-radius: 6px;"><span class="material-symbols-rounded" style="font-size: 18px;">shopping_cart</span></button>
+                </div>
+              </div>
+            </div>
+            <p class="text-muted mt-3 text-center" style="font-size: 11px;">تتحدث المعاينة تلقائياً أثناء كتابتك للتفاصيل</p>
+          </div>
+          
+          <!-- Organization -->
+          <div class="glass-card mb-4">
+            <h2 style="font-size: 1.1rem; margin-bottom: 20px; color: var(--primary-color);">التصنيف والتنظيم</h2>
+            
+            <div class="form-group">
+              <label class="form-label">رقم المنتج التعريفي (الداخلي)</label>
+              <input type="text" name="product_id" class="form-control" value="<%= product ? product.product_id : ('P-' + Date.now().toString().slice(-6)) %>" dir="ltr" required>
+            </div>
+
+            <div class="form-group mt-3">
+              <label class="form-label">القسم الرئيسي</label>
+              <select name="department_id" class="form-control">
+                <option value="">اختر القسم...</option>
+                <% departments.forEach(dep => { %>
+                  <option value="<%= dep.id %>" <%= product && product.department_id === dep.id ? 'selected' : '' %>><%= dep.name_ar %></option>
+                <% }) %>
+              </select>
+            </div>
+
+            <div class="form-group mt-3">
+              <label class="form-label">الفئة الفرعية</label>
+              <select name="category_id" class="form-control">
+                <option value="">اختر الفئة...</option>
+                <% categories.forEach(cat => { %>
+                  <option value="<%= cat.id %>" <%= product && product.category_id === cat.id ? 'selected' : '' %>><%= cat.name_ar %></option>
+                <% }) %>
+              </select>
+            </div>
+          </div>
+
+          <!-- Visibility & Badges -->
+          <div class="glass-card mb-4">
+            <h2 style="font-size: 1.1rem; margin-bottom: 20px; color: var(--primary-color);">الحالة والشارات</h2>
+
+            <div style="display: flex; flex-direction: column; gap: 15px;">
+              <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 12px; background: var(--bg-tertiary); border-radius: 8px;">
+                <input type="checkbox" name="is_active" <%= (!product || product.is_active) ? 'checked' : '' %> style="width: 18px; height: 18px;">
+                <span style="font-weight: 600;">منتج نشط ومرئي</span>
+              </label>
+
+              <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                <input type="checkbox" name="is_new" <%= (product && product.is_new) ? 'checked' : '' %> style="width: 18px; height: 18px;">
+                <span>إظهار كـ "وصل حديثاً" (New)</span>
+              </label>
+
+              <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                <input type="checkbox" name="is_best_seller" <%= (product && product.is_best_seller) ? 'checked' : '' %> style="width: 18px; height: 18px;">
+                <span>إظهار كـ "الأكثر مبيعاً" (Best Seller)</span>
+              </label>
+
+              <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                <input type="checkbox" name="installation" <%= (product && product.installation) ? 'checked' : '' %> style="width: 18px; height: 18px;">
+                <span>يشمل التركيب المجاني</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Publish Action -->
+          <div class="glass-card mb-4" style="text-align: center;">
+            <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 14px; font-size: 16px;">
+              <span class="material-symbols-rounded">save</span>
+              حفظ بيانات المنتج
+            </button>
+            <% if (product) { %>
+            <a href="/product/<%= product.slug || product.id %>" target="_blank" class="btn btn-outline mt-3" style="width: 100%; justify-content: center; padding: 14px; font-size: 16px;">
+              <span class="material-symbols-rounded">visibility</span>
+              معاينة المنتج
+            </a>
+            <% } %>
+            <p class="text-muted mt-3" style="font-size: 12px;">المواصفات والألوان يتم إدارتها من صفحات منفصلة بعد حفظ المنتج الأساسي.</p>
+          </div>
+
+        </div>
+      </div>
+    </form>
+  </div>
+</main>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const departmentSelect = document.querySelector('select[name="department_id"]');
+  const categorySelect = document.querySelector('select[name="category_id"]');
+  
+  if (departmentSelect && categorySelect) {
+    departmentSelect.addEventListener('change', async function() {
+      const deptId = this.value;
+      
+      // Clear current options
+      categorySelect.innerHTML = '<option value="">جاري التحميل...</option>';
+      
+      if (!deptId) {
+        categorySelect.innerHTML = '<option value="">اختر القسم أولاً...</option>';
+        return;
+      }
+      
+      try {
+        const response = await fetch(`/admin/categories/api/by-department/${deptId}`);
+        const result = await response.json();
+        
+        if (result.success) {
+          if (result.data.length === 0) {
+            categorySelect.innerHTML = '<option value="">لا توجد فئات لهذا القسم</option>';
+          } else {
+            categorySelect.innerHTML = '<option value="">اختر الفئة...</option>';
+            result.data.forEach(cat => {
+              const option = document.createElement('option');
+              option.value = cat.id;
+              option.textContent = cat.name_ar;
+              categorySelect.appendChild(option);
+            });
+          }
+        } else {
+          categorySelect.innerHTML = '<option value="">حدث خطأ</option>';
+        }
+      } catch (err) {
+        console.error(err);
+        categorySelect.innerHTML = '<option value="">حدث خطأ في الاتصال</option>';
+      }
+    });
+  }
+
+  // ==== LIVE PREVIEW SCRIPT ====
+  const titleInput = document.querySelector('input[name="title"]');
+  const priceInput = document.querySelector('input[name="price"]');
+  const oldPriceInput = document.querySelector('input[name="old_price"]');
+  const imageInput = document.querySelector('input[name="images"]');
+  const isNewCheckbox = document.querySelector('input[name="is_new"]');
+  const isBestCheckbox = document.querySelector('input[name="is_best_seller"]');
+  
+  const previewTitle = document.getElementById('preview_title');
+  const previewPrice = document.getElementById('preview_price');
+  const previewOldPrice = document.getElementById('preview_old_price');
+  const previewImage = document.getElementById('preview_image');
+  const previewBadgeNew = document.getElementById('preview_badge_new');
+  const previewBadgeBest = document.getElementById('preview_badge_best');
+  
+  // Format Price Function
+  const formatLivePrice = (val) => {
+    const num = parseFloat(val);
+    if (isNaN(num)) return '0 ر.س';
+    return new Intl.NumberFormat('en-US', { minimumFractionDigits: 0 }).format(num) + ' ر.س';
+  };
+
+  if (titleInput) {
+    titleInput.addEventListener('input', (e) => {
+      previewTitle.textContent = e.target.value || 'اسم المنتج';
+    });
+    // Trigger initial
+    if (titleInput.value) previewTitle.textContent = titleInput.value;
+  }
+
+  if (priceInput) {
+    priceInput.addEventListener('input', (e) => {
+      previewPrice.textContent = formatLivePrice(e.target.value);
+    });
+    // Trigger initial
+    if (priceInput.value) previewPrice.textContent = formatLivePrice(priceInput.value);
+  }
+
+  if (oldPriceInput) {
+    oldPriceInput.addEventListener('input', (e) => {
+      if (e.target.value && parseFloat(e.target.value) > 0) {
+        previewOldPrice.style.display = 'inline';
+        previewOldPrice.textContent = formatLivePrice(e.target.value);
+      } else {
+        previewOldPrice.style.display = 'none';
+      }
+    });
+    // Trigger initial
+    if (oldPriceInput.value && parseFloat(oldPriceInput.value) > 0) {
+      previewOldPrice.style.display = 'inline';
+      previewOldPrice.textContent = formatLivePrice(oldPriceInput.value);
+    }
+  }
+
+  if (imageInput) {
+    imageInput.addEventListener('change', (e) => {
+      if (e.target.files && e.target.files[0]) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          previewImage.src = e.target.result;
+        };
+        reader.readAsDataURL(e.target.files[0]);
+      }
+    });
+  }
+
+  if (isNewCheckbox) {
+    isNewCheckbox.addEventListener('change', (e) => {
+      previewBadgeNew.style.display = e.target.checked ? 'block' : 'none';
+    });
+    if (isNewCheckbox.checked) previewBadgeNew.style.display = 'block';
+  }
+
+  if (isBestCheckbox) {
+    isBestCheckbox.addEventListener('change', (e) => {
+      previewBadgeBest.style.display = e.target.checked ? 'block' : 'none';
+    });
+    if (isBestCheckbox.checked) previewBadgeBest.style.display = 'block';
+  }
+
+});
+</script>
+  <script src="/search-manager.js"></script>\n  <script src="/wishlist-manager.js"></script>\n</body>
+</html>

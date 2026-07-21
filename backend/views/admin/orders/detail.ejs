@@ -1,0 +1,145 @@
+<%- include('../../partials/head', { title }) %>
+<%- include('../../partials/sidebar', { active }) %>
+<main class="admin-main">
+  <%- include('../../partials/topbar') %>
+  <div class="admin-content">
+    
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h1 class="page-title"><%= title %></h1>
+      <a href="/admin/orders" class="btn btn-outline">
+        <span class="material-symbols-rounded">arrow_forward</span>
+        العودة للقائمة
+      </a>
+    </div>
+
+    <div class="row" style="display: flex; flex-wrap: wrap; margin: -12px;">
+      
+      <!-- تفاصيل الطلب والمنتجات -->
+      <div style="flex: 0 0 66.66%; padding: 12px; box-sizing: border-box;">
+        <div class="glass-card mb-4">
+          <h2 style="font-size: 1.1rem; margin-bottom: 20px; color: var(--primary-color);">المنتجات المطلوبة</h2>
+          <div class="table-responsive">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>المنتج</th>
+                  <th class="text-center">السعر</th>
+                  <th class="text-center">الكمية</th>
+                  <th class="text-center">الإجمالي</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% items.forEach(item => { %>
+                  <tr>
+                    <td><strong><%= item.product_title %></strong></td>
+                    <td class="text-center"><%= helpers.formatPrice(item.price) %></td>
+                    <td class="text-center"><%= item.quantity %></td>
+                    <td class="text-center"><strong><%= helpers.formatPrice(item.total) %></strong></td>
+                  </tr>
+                <% }) %>
+              </tbody>
+            </table>
+          </div>
+          
+          <div class="mt-4" style="background: var(--bg-tertiary); padding: 20px; border-radius: 12px;">
+            <div class="d-flex justify-content-between mb-2">
+              <span class="text-muted">المجموع الفرعي:</span> 
+              <strong><%= helpers.formatPrice(order.subtotal) %></strong>
+            </div>
+            <div class="d-flex justify-content-between mb-2">
+              <span class="text-muted">رسوم التوصيل:</span> 
+              <strong><%= helpers.formatPrice(order.shipping_fee) %></strong>
+            </div>
+            <% if (order.discount && order.discount > 0) { %>
+            <div class="d-flex justify-content-between mb-2">
+              <span class="text-danger">الخصم:</span> 
+              <strong class="text-danger">-<%= helpers.formatPrice(order.discount) %></strong>
+            </div>
+            <% } %>
+            <div class="d-flex justify-content-between mt-3 pt-3" style="border-top: 1px solid var(--border-color);">
+              <span style="font-size: 1.2rem; font-weight: 700;">الإجمالي:</span> 
+              <span style="font-size: 1.2rem; font-weight: 700; color: var(--primary-color);"><%= helpers.formatPrice(order.total) %></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- معلومات العميل والحالة -->
+      <div style="flex: 0 0 33.33%; padding: 12px; box-sizing: border-box;">
+        
+        <div class="glass-card mb-4">
+          <h2 style="font-size: 1.1rem; margin-bottom: 20px; color: var(--primary-color);">تحديث الحالة</h2>
+          <form action="/admin/orders/<%= order.id %>/status" method="POST">
+            <input type="hidden" name="_csrf" value="<%= typeof csrfToken !== 'undefined' ? csrfToken : '' %>">
+            <div class="form-group mb-3">
+              <select name="status" class="form-control">
+                <option value="pending" <%= order.status === 'pending' ? 'selected' : '' %>>في الانتظار</option>
+                <option value="confirmed" <%= order.status === 'confirmed' ? 'selected' : '' %>>تم التأكيد</option>
+                <option value="processing" <%= order.status === 'processing' ? 'selected' : '' %>>قيد التجهيز</option>
+                <option value="shipped" <%= order.status === 'shipped' ? 'selected' : '' %>>تم الشحن</option>
+                <option value="delivered" <%= order.status === 'delivered' ? 'selected' : '' %>>تم التوصيل</option>
+                <option value="cancelled" <%= order.status === 'cancelled' ? 'selected' : '' %>>ملغي</option>
+              </select>
+            </div>
+            <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center;">
+              <span class="material-symbols-rounded">update</span>
+              تحديث الحالة
+            </button>
+          </form>
+        </div>
+
+        <div class="glass-card mb-4">
+          <h2 style="font-size: 1.1rem; margin-bottom: 20px; color: var(--primary-color);">بيانات العميل</h2>
+          
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="d-flex justify-content-between">
+              <span class="text-muted">الاسم:</span>
+              <strong><%= order.first_name %> <%= order.last_name || '' %></strong>
+            </div>
+            <div class="d-flex justify-content-between">
+              <span class="text-muted">الهاتف:</span>
+              <a href="tel:<%= order.phone %>" dir="ltr" style="text-decoration: none; font-weight: 600;"><%= order.phone %></a>
+            </div>
+            <div class="d-flex justify-content-between">
+              <span class="text-muted">المدينة:</span>
+              <strong><%= order.city || '-' %></strong>
+            </div>
+            <div class="d-flex flex-column mt-2 pt-2" style="border-top: 1px solid var(--border-color);">
+              <span class="text-muted mb-1">العنوان التفصيلي:</span>
+              <span><%= order.district || '' %> - <%= order.address_detail || '-' %></span>
+            </div>
+          </div>
+          
+          <div class="mt-4 pt-3" style="border-top: 1px solid var(--border-color);">
+            <div class="d-flex justify-content-between mb-2">
+              <span class="text-muted">طريقة الدفع:</span>
+              <strong><%= helpers.paymentLabel(order.payment_method) %></strong>
+            </div>
+            <div class="d-flex justify-content-between">
+              <span class="text-muted">طريقة التوصيل:</span>
+              <strong><%= order.delivery_method || '-' %></strong>
+            </div>
+          </div>
+
+          <% if (order.notes) { %>
+            <div class="mt-4 p-3" style="background: rgba(234, 179, 8, 0.1); border-left: 4px solid var(--accent-color); border-radius: 4px;">
+              <strong style="color: var(--accent-color); display: block; margin-bottom: 5px;">ملاحظات العميل:</strong>
+              <p style="margin: 0; font-size: 14px;"><%= order.notes %></p>
+            </div>
+          <% } %>
+          
+          <% if (order.whatsapp_message) { %>
+            <div class="mt-4">
+              <a href="https://wa.me/<%= order.phone.replace(/[^0-9]/g, '') %>?text=<%= encodeURIComponent(order.whatsapp_message) %>" target="_blank" class="btn" style="background: #25D366; color: white; width: 100%; justify-content: center; text-decoration: none;">
+                <span class="material-symbols-rounded">chat</span> إرسال عبر واتساب
+              </a>
+            </div>
+          <% } %>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+  <script src="/search-manager.js"></script>\n  <script src="/wishlist-manager.js"></script>\n</body>
+</html>
