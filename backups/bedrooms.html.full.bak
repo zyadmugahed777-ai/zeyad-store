@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>غرف النوم والأطفال — زياد للتجارة</title>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="responsive-pro.css">
+  <style>
+    /* ── Categories Grid ── */
+    .app-categories-grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+    .app-cat-card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px 12px; text-align: center; text-decoration: none; color: var(--ink); transition: var(--ease); display: flex; flex-direction: column; align-items: center; justify-content: center; font-weight: 600; font-size: 1.1rem; }
+    .app-cat-card:hover { border-color: var(--gold); box-shadow: var(--shadow-soft); transform: translateY(-2px); }
+
+    /* ── Packages Grid ── */
+    .pkg-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px; padding: 0 var(--container-px); }
+    .pkg-card { background: var(--surface-2); border-radius: 20px; overflow: hidden; display: flex; flex-direction: column; border: 1px solid var(--line); transition: var(--ease); }
+    .pkg-card:hover { box-shadow: var(--shadow-lift); border-color: var(--olive); }
+    .pkg-image { height: 200px; background-size: cover; background-position: center; background-color: #eee; }
+    .pkg-content { padding: 32px; display: flex; flex-direction: column; flex: 1; }
+    .pkg-content h3 { font-size: 1.4rem; margin: 0 0 8px; color: var(--ink); }
+    .pkg-price { font-size: 0.9rem; color: var(--muted); margin-bottom: 24px; }
+    .pkg-price strong { font-size: 1.8rem; color: var(--olive); }
+    .pkg-features { list-style: none; padding: 0; margin: 0 0 32px; flex: 1; }
+    .pkg-features li { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; font-size: 0.95rem; }
+    .pkg-features li svg { width: 18px; height: 18px; stroke: var(--olive); }
+    .btn-pkg { display: block; width: 100%; text-align: center; padding: 16px; background: #fff; color: var(--ink); font-weight: 600; text-decoration: none; border-radius: 8px; border: 1px solid var(--line); transition: var(--ease); }
+    .btn-pkg:hover { background: var(--olive); color: #fff; border-color: var(--olive); }
+
+    /* ── Split Hero (Bedrooms & Kids) ── */
+    .hero-dual-cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      padding: 24px var(--container-px);
+    }
+    @media (max-width: 900px) {
+      .hero-dual-cards { grid-template-columns: 1fr; }
+    }
+    .dual-card {
+      position: relative;
+      border-radius: 20px;
+      overflow: hidden;
+      min-height: 480px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 48px;
+      color: #fff;
+      text-decoration: none;
+      transition: var(--ease);
+      background-size: cover;
+      background-position: center;
+    }
+    .dual-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 60%, rgba(0,0,0,0.5) 100%);
+      transition: var(--ease);
+    }
+    .dual-card:hover::before {
+      background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.3) 60%, rgba(0,0,0,0.6) 100%);
+    }
+    .dual-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lift);
+    }
+    .dual-card-content {
+      position: relative;
+      z-index: 2;
+    }
+    .dual-card h1 {
+      font-size: 2.8rem;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 12px;
+      color: #fff;
+    }
+    .dual-card p {
+      font-size: 1.1rem;
+      color: rgba(255,255,255,0.9);
+      margin-bottom: 24px;
+      max-width: 320px;
+    }
+    .dual-card .btn {
+      display: inline-block;
+      background: var(--gold);
+      color: var(--ink);
+      padding: 14px 28px;
+      border-radius: 8px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: var(--ease);
+    }
+    .dual-card:hover .btn {
+      background: #fff;
+    }
+    .dual-card-features {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      gap: 16px;
+      border-top: 1px solid rgba(255,255,255,0.2);
+      padding-top: 20px;
+      flex-wrap: wrap;
+    }
+    .dual-card-feature {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+    .dual-card-feature svg {
+      width: 16px;
+      height: 16px;
+      stroke: var(--gold);
+    }
+
+    /* ── Image Category Cards ── */
+    .image-categories-section {
+      display: grid;
+    }
+    .img-cats-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .img-cats-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+    .img-cats-header h2 {
+      font-size: 1.4rem;
+      color: var(--ink);
+    }
+    .img-cats-header a {
+      color: var(--gold);
+      font-size: 0.9rem;
+      text-decoration: none;
+    }
+    .img-cats-grid {
+      display: flex;
+      gap: 16px;
+      overflow-x: auto;
+      padding-bottom: 16px;
+      scrollbar-width: none;
+    }
+    .img-cats-grid::-webkit-scrollbar { display: none; }
+    .img-cat-card {
+      min-width: 160px;
+      text-decoration: none;
+      color: var(--ink);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      transition: var(--ease);
+    }
+    .img-cat-card:hover {
+      transform: translateY(-4px);
+    }
+    .img-cat-photo {
+      width: 100%;
+      height: 140px;
+      border-radius: 12px;
+      background: var(--surface-2);
+      background-size: cover;
+      background-position: center;
+    }
+    .img-cat-card strong {
+      font-size: 0.95rem;
+      display: block;
+    }
+    .img-cat-card small {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <div class="shop-shell">
+    <header class="top-note">
+      <span>توصيل وتركيب مجاني داخل المدن الرئيسية</span>
+      <span>ضمان 10 سنوات على الأخشاب والهياكل</span>
+      <span>تصميم حسب ذوقك ومساحتك</span>
+    </header>
+    <nav class="main-nav" aria-label="التنقل الرئيسي"></nav>
+    <main></main>
+    <footer class="footer"></footer>
+  </div>
+</body>
+</html>

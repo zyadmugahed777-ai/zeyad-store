@@ -1,0 +1,54 @@
+:root {
+  color-scheme: light;
+  --ink: #1c1813;
+  --ink-soft: #3e342b;
+  --muted: #756b5f;
+  --paper: #faf5ec;
+  --surface: #fffdf8;
+  --surface-2: #f4eadc;
+  --line: #e3d5c3;
+  --line-strong: #d6c2aa;
+  --olive: #5a6d4e;
+  --olive-deep: #23382e;
+  --walnut: #8b5e3c;
+  --copper: #b76643;
+  --blue: #446b70;
+  --gold: #c79a52;
+  --cream: #fff8ed;
+  --radius: 8px;
+  --container: 1320px;
+  --shadow-soft: 0 14px 36px rgba(55, 43, 31, 0.09);
+  --shadow-lift: 0 24px 62px rgba(55, 43, 31, 0.16);
+  --ease: 180ms ease;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+:focus-visible {
+  outline: 2px solid rgba(90, 109, 78, 0.56);
+  outline-offset: 2px;
+  border-radius: var(--radius);
+}
+
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background:
+    linear-gradient(90deg, rgba(227, 213, 195, 0.24) 1px, transparent 1px),
+    linear-gradient(180deg, #fbf4e9 0%, #fffdf8 42%, #f7efe3 100%);
+  background-size: 72px 72px, auto;
+  color: var(--ink);
+  font-family: "IBM Plex Sans Arabic", Tahoma, Arial, sans-serif;
+  letter-spacing: 0;
+}
+
+/* backup content intentionally preserved before modification */
