@@ -1,0 +1,988 @@
+/* ==========================================================================
+   ZEYAD FOR BUSINESS - RESPONSIVE ARCHITECTURE
+   ========================================================================== 
+   Strict, intentional responsive design ensuring Pixel-Perfect layouts.
+   Breakpoints: 320, 375, 390, 414, 768, 1024, 1280, 1440, 1600, 1920.
+*/
+
+/* ==========================================================================
+   MAJALIS PAGE
+   ========================================================================== */
+
+.majalis-page {
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 0 24px 72px;
+}
+
+.majalis-main-nav {
+  position: sticky;
+}
+
+.majalis-subnav {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 10px 24px 0;
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+  font-weight: 600;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.majalis-subnav::-webkit-scrollbar {
+  display: none;
+}
+
+.majalis-subnav a {
+  flex: 0 0 auto;
+  padding: 12px 0;
+  border-bottom: 2px solid transparent;
+}
+
+.majalis-subnav a.active {
+  color: var(--gold);
+  border-bottom-color: var(--gold);
+}
+
+.majalis-hero-shell {
+  margin-top: 16px;
+}
+
+.majalis-hero-banner {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1.55fr) 360px;
+  gap: 18px;
+  align-items: stretch;
+}
+
+.majalis-hero-copy {
+  position: relative;
+  min-height: 560px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 40px 44px;
+  color: var(--cream);
+  background:
+    linear-gradient(90deg, rgba(28, 24, 19, 0.72), rgba(28, 24, 19, 0.2)),
+    url("assets/zeyad-hero-showroom.png") center/cover;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: var(--shadow-lift);
+}
+
+.majalis-hero-copy h1 {
+  max-width: 620px;
+  margin-bottom: 10px;
+  color: #fff;
+  font-size: clamp(2.4rem, 4vw, 4.1rem);
+}
+
+.majalis-hero-copy p {
+  margin-bottom: 24px;
+  color: rgba(255, 248, 237, 0.88);
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.majalis-hero-actions a:last-child {
+  background: rgba(255, 253, 248, 0.12);
+  color: var(--cream);
+  border-color: rgba(255, 248, 237, 0.25);
+}
+
+.majalis-calculator-card {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 22px;
+  color: var(--cream);
+  background:
+    radial-gradient(circle at 100% 0, rgba(199, 154, 82, 0.18), transparent 36%),
+    linear-gradient(180deg, #10261f, #162c24);
+  border: 2px solid rgba(199, 154, 82, 0.4);
+  border-radius: 18px;
+  box-shadow: var(--shadow-lift);
+}
+
+.majalis-calculator-head h2,
+.majalis-calculator-head p {
+  margin: 0;
+}
+
+.majalis-calculator-head h2 {
+  color: var(--gold);
+  font-size: 1.7rem;
+}
+
+.majalis-calculator-head p {
+  margin-top: 8px;
+  color: rgba(255, 248, 237, 0.78);
+  line-height: 1.7;
+}
+
+.majalis-steps {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.majalis-steps li {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  aspect-ratio: 1;
+  max-width: 34px;
+  color: rgba(255, 248, 237, 0.76);
+  background: rgba(255, 248, 237, 0.08);
+  border: 1px solid rgba(255, 248, 237, 0.16);
+  border-radius: 50%;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.majalis-steps li.active {
+  color: var(--olive-deep);
+  background: var(--gold);
+  border-color: var(--gold);
+}
+
+.majalis-step-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.95rem;
+}
+
+.majalis-step-meta span {
+  color: rgba(255, 248, 237, 0.7);
+}
+
+.majalis-step-meta strong {
+  color: #fff;
+}
+
+.majalis-option-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.majalis-option {
+  padding: 8px;
+  color: var(--cream);
+  background: rgba(255, 248, 237, 0.04);
+  border: 1px solid rgba(199, 154, 82, 0.25);
+  border-radius: 12px;
+}
+
+.majalis-option.active {
+  border-color: var(--gold);
+  box-shadow: inset 0 0 0 1px rgba(199, 154, 82, 0.4);
+}
+
+.majalis-option-photo,
+.majalis-type-photo,
+.majalis-project-shot,
+.product-photo[class*="majlis-photo"] {
+  display: block;
+  background-image: url("assets/zeyad-hero-showroom.png");
+  background-size: cover;
+  background-position: center;
+}
+
+.majalis-option-photo {
+  height: 72px;
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
+
+.option-royal,
+.type-royal,
+.majlis-photo-1,
+.shot-1 { background-position: center 8%; }
+.option-economy,
+.type-economy,
+.majlis-photo-2,
+.shot-2 { background-position: center 24%; }
+.option-modern,
+.type-modern,
+.majlis-photo-3,
+.shot-3 { background-position: center 40%; }
+.option-classic,
+.type-classic,
+.majlis-photo-4,
+.shot-4 { background-position: center 56%; }
+.option-arabic,
+.type-floor,
+.majlis-photo-5,
+.shot-5 { background-position: center 72%; }
+.option-gulf,
+.type-gulf { background-position: center 88%; }
+.type-blue { background-position: left center; }
+
+.majalis-option strong {
+  display: block;
+  font-size: 0.82rem;
+  line-height: 1.4;
+}
+
+.majalis-calc-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  color: var(--olive-deep);
+  background: linear-gradient(180deg, #d4aa62, var(--gold));
+  border-radius: 12px;
+  font-weight: 700;
+}
+
+.majalis-service-strip {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1px;
+  margin-top: 10px;
+  overflow: hidden;
+  background: rgba(199, 154, 82, 0.18);
+  border: 1px solid rgba(199, 154, 82, 0.24);
+  border-radius: 14px;
+}
+
+.majalis-service-strip div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 58px;
+  padding: 12px;
+  background: rgba(35, 56, 46, 0.94);
+  color: var(--gold);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.majalis-service-strip svg {
+  width: 18px;
+  height: 18px;
+}
+
+.majalis-types-section,
+.majalis-projects-section,
+.majalis-materials-row,
+.majalis-why-section,
+.majalis-faq-section {
+  margin-top: 34px;
+}
+
+.majalis-types-rail {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.majalis-type-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 8px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  box-shadow: 0 8px 24px rgba(55, 43, 31, 0.04);
+}
+
+.majalis-type-photo {
+  aspect-ratio: 1.3 / 1;
+  border-radius: 10px;
+}
+
+.majalis-type-card strong {
+  font-size: 0.92rem;
+}
+
+.majalis-type-card span:last-child {
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.majalis-pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  padding: 0 14px;
+  color: var(--cream);
+  background: var(--gold);
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.majalis-projects-gallery {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+}
+
+.majalis-project-shot {
+  min-height: 126px;
+  border-radius: 14px;
+}
+
+.majalis-project-stats {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.majalis-project-stats div,
+.majalis-why-card {
+  padding: 18px;
+  background: rgba(255, 253, 248, 0.9);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+}
+
+.majalis-project-stats strong,
+.majalis-project-stats span,
+.majalis-why-card strong,
+.majalis-why-card span {
+  display: block;
+}
+
+.majalis-project-stats strong {
+  color: var(--gold);
+  font-size: 1.45rem;
+}
+
+.majalis-project-stats span {
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 0.84rem;
+}
+
+.majalis-product-grid {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.majalis-card-tag {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  min-height: 26px;
+  padding: 0 10px;
+  margin-bottom: 8px;
+  color: var(--ink-soft);
+  background: #f4eadc;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.majalis-materials-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.majalis-material-box {
+  padding: 20px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+}
+
+.majalis-swatches {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 12px;
+}
+
+.majalis-swatch-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  color: var(--ink);
+}
+
+.majalis-swatch {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 14px;
+  border: 1px solid rgba(28, 24, 19, 0.08);
+}
+
+.swatch-red { background: linear-gradient(135deg, #7b0f1f, #b02d3f); }
+.swatch-brown { background: linear-gradient(135deg, #714324, #9d6a49); }
+.swatch-blue { background: linear-gradient(135deg, #274b74, #496e9f); }
+.swatch-gray { background: linear-gradient(135deg, #9ea4ad, #d2d6da); }
+.swatch-pattern { background: linear-gradient(135deg, #8c6b3d, #d4b07a); }
+.swatch-beige { background: linear-gradient(135deg, #b89a67, #dbc08d); }
+.wood-1 { background: linear-gradient(135deg, #8c5316, #a96f2e); }
+.wood-2 { background: linear-gradient(135deg, #c99a5b, #deb878); }
+.wood-3 { background: linear-gradient(135deg, #976939, #b68757); }
+.wood-4 { background: linear-gradient(135deg, #c7a16a, #dfbd8d); }
+.wood-5 { background: linear-gradient(135deg, #93602c, #b57c43); }
+.wood-6 { background: linear-gradient(135deg, #ccb184, #e3d0ad); }
+
+.majalis-swatch-card strong {
+  font-size: 0.84rem;
+}
+
+.majalis-measurement-cta {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 18px;
+  margin-top: 16px;
+  padding: 24px 28px;
+  color: var(--cream);
+  background:
+    radial-gradient(circle at 95% 50%, rgba(199, 154, 82, 0.22), transparent 22%),
+    linear-gradient(135deg, var(--olive-deep), #183127);
+  border-radius: 18px;
+}
+
+.majalis-measurement-copy h2,
+.majalis-measurement-copy p {
+  margin: 0;
+}
+
+.majalis-measurement-copy .overline {
+  color: var(--gold);
+}
+
+.majalis-measurement-copy h2 {
+  color: #fff;
+  margin-bottom: 8px;
+}
+
+.majalis-measurement-copy p:last-child {
+  color: rgba(255, 248, 237, 0.78);
+  line-height: 1.7;
+}
+
+.majalis-why-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 12px;
+}
+
+.majalis-why-card {
+  text-align: center;
+}
+
+.majalis-why-card svg {
+  width: 24px;
+  height: 24px;
+  color: var(--gold);
+  margin-bottom: 12px;
+}
+
+.majalis-why-card strong {
+  font-size: 0.92rem;
+}
+
+.majalis-why-card span {
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 0.82rem;
+  line-height: 1.6;
+}
+
+.majalis-footer {
+  margin-top: 16px;
+}
+
+@media (max-width: 1279px) {
+  .majalis-hero-banner {
+    grid-template-columns: 1fr;
+  }
+
+  .majalis-calculator-card {
+    max-width: 520px;
+  }
+
+  .majalis-types-rail,
+  .majalis-projects-gallery,
+  .majalis-project-stats,
+  .majalis-why-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .majalis-product-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .majalis-swatches {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 1023px) {
+  .majalis-page,
+  .majalis-subnav {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .majalis-service-strip {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .majalis-materials-row,
+  .majalis-measurement-cta {
+    grid-template-columns: 1fr;
+  }
+
+  .majalis-measurement-cta .btn-hero-primary {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 767px) {
+  .majalis-hero-copy {
+    min-height: 380px;
+    padding: 28px 20px;
+    align-items: flex-start;
+  }
+
+  .majalis-hero-copy p {
+    font-size: 1rem;
+  }
+
+  .majalis-calculator-card {
+    padding: 18px;
+  }
+
+  .majalis-option-grid,
+  .majalis-types-rail,
+  .majalis-projects-gallery,
+  .majalis-project-stats,
+  .majalis-product-grid,
+  .majalis-why-grid,
+  .majalis-swatches {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .majalis-subnav {
+    justify-content: flex-start;
+    gap: 18px;
+    font-size: 0.88rem;
+  }
+
+  .majalis-service-strip {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 479px) {
+  .majalis-page {
+    padding-bottom: 56px;
+  }
+
+  .majalis-steps {
+    gap: 4px;
+  }
+
+  .majalis-option-grid,
+  .majalis-types-rail,
+  .majalis-projects-gallery,
+  .majalis-project-stats,
+  .majalis-product-grid,
+  .majalis-why-grid,
+  .majalis-swatches {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   1. MOBILE CORE (Default - targeting 320px to 414px)
+   -------------------------------------------------------------------------- */
+/* Common Mobile Overrides */
+.pro-container {
+  padding-left: 20px;
+  padding-right: 20px;
+}
+.section-block {
+  padding: 40px 0;
+}
+.section-head {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 0 20px;
+}
+.countdown-inline {
+  width: 100%;
+  justify-content: space-between;
+}
+
+/* ── APPLIANCES MOBILE ── */
+.appliances-hero {
+  min-height: 480px;
+  padding: 40px 20px;
+  align-items: flex-end;
+}
+.appliances-hero-content {
+  max-width: 100%;
+}
+.appliances-hero-content h1 {
+  font-size: 2.5rem;
+}
+.appliances-hero-content p {
+  font-size: 1rem;
+}
+.appliances-features-bar {
+  flex-direction: column;
+  gap: 16px;
+  padding-top: 20px;
+  margin-top: 24px;
+}
+.app-categories-grid {
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin: 32px 20px;
+}
+.brands-section {
+  margin: 32px 20px;
+  padding: 24px 20px;
+}
+.brands-grid {
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+.trust-bar {
+  grid-template-columns: 1fr;
+  padding: 0 20px;
+  gap: 24px;
+}
+
+/* ── BEDROOMS MOBILE ── */
+.hero-dual-cards {
+  grid-template-columns: 1fr;
+  padding: 20px;
+}
+.dual-card {
+  min-height: 400px;
+  padding: 32px;
+}
+.dual-card h1 {
+  font-size: 2.2rem;
+}
+.dual-card-features {
+  flex-direction: column;
+  gap: 12px;
+}
+.image-categories-section {
+  padding: 40px 20px;
+  grid-template-columns: 1fr;
+  gap: 40px;
+}
+.img-cats-grid {
+  gap: 12px;
+}
+.img-cat-card {
+  min-width: 140px;
+}
+
+/* ── KITCHENS MOBILE ── */
+.kitchen-hero {
+  min-height: 500px;
+  padding: 40px 20px;
+  align-items: flex-end;
+}
+.kitchen-hero-content h1 {
+  font-size: 2.5rem;
+}
+.kitchen-hero-actions {
+  flex-direction: column;
+  width: 100%;
+}
+.kitchen-hero-actions a {
+  width: 100%;
+  text-align: center;
+}
+.floating-badge {
+  display: none; /* Hidden on mobile to save space */
+}
+.kitchen-styles, .kitchen-packages {
+  padding: 40px 20px;
+}
+.k-style-grid, .packages-grid {
+  grid-template-columns: 1fr;
+}
+.pkg-card {
+  padding: 24px;
+}
+
+/* ── MAJALIS MOBILE ── */
+.majalis-hero {
+  padding: 40px 20px;
+}
+.majalis-hero-content {
+  grid-template-columns: 1fr;
+  gap: 40px;
+}
+.majalis-text h1 {
+  font-size: 2.5rem;
+}
+.majalis-features {
+  flex-direction: column;
+  gap: 16px;
+}
+.majalis-calc {
+  padding: 24px;
+}
+.calc-row {
+  flex-direction: column;
+  gap: 16px;
+}
+.calc-checkboxes {
+  grid-template-columns: 1fr;
+}
+.majalis-features-grid, .majalis-packages, .edu-promo {
+  padding: 40px 20px;
+}
+.mf-grid, .mp-grid, .edu-grid {
+  grid-template-columns: 1fr;
+}
+.mp-content {
+  padding: 24px;
+}
+
+/* ── SOLAR MOBILE ── */
+.hero-split {
+  grid-template-columns: 1fr;
+  padding: 40px 20px;
+  gap: 40px;
+}
+.hero-split-text h1 {
+  font-size: 2.5rem;
+}
+.hero-features-row {
+  flex-direction: column;
+  gap: 16px;
+}
+.solar-calculator {
+  padding: 24px;
+}
+.calc-steps-row {
+  flex-direction: column;
+  gap: 16px;
+}
+.calc-arrow {
+  transform: rotate(90deg);
+}
+
+/* --------------------------------------------------------------------------
+   2. SPECIFIC MOBILE BREAKPOINTS (320, 375, 390, 414)
+   Minor tweaks for exact thumb/text adjustments
+   -------------------------------------------------------------------------- */
+@media (max-width: 350px) { /* 320px bounds */
+  .dual-card h1, .appliances-hero-content h1, .kitchen-hero-content h1, .majalis-text h1, .hero-split-text h1 { font-size: 2rem; }
+  .btn-hero-primary { font-size: 0.9rem; padding: 12px; }
+}
+
+@media (min-width: 375px) and (max-width: 414px) {
+  /* Comfort padding for larger phones */
+  .app-categories-grid { gap: 16px; }
+  .dual-card { min-height: 440px; }
+}
+
+
+/* --------------------------------------------------------------------------
+   3. TABLET (768px - 1023px)
+   -------------------------------------------------------------------------- */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .pro-container { padding-left: 32px; padding-right: 32px; }
+  .section-head { flex-direction: row; align-items: flex-end; padding: 0 32px; }
+  
+  /* Appliances */
+  .appliances-hero { padding: 60px 32px; align-items: center; }
+  .app-categories-grid { grid-template-columns: repeat(4, 1fr); margin: 40px 32px; }
+  .brands-grid { grid-template-columns: repeat(4, 1fr); }
+  .trust-bar { grid-template-columns: repeat(2, 1fr); padding: 0 32px; }
+
+  /* Bedrooms */
+  .hero-dual-cards { grid-template-columns: 1fr; padding: 32px; }
+  .dual-card { min-height: 480px; }
+  .dual-card-features { flex-direction: row; }
+  .image-categories-section { grid-template-columns: 1fr; padding: 40px 32px; }
+
+  /* Kitchens */
+  .kitchen-hero { padding: 60px 32px; align-items: center; }
+  .kitchen-hero-actions { flex-direction: row; }
+  .kitchen-hero-actions a { width: auto; }
+  .floating-badge { display: flex; left: 32px; bottom: 32px; }
+  .k-style-grid { grid-template-columns: repeat(2, 1fr); }
+  .packages-grid { grid-template-columns: repeat(2, 1fr); }
+
+  /* Majalis */
+  .majalis-hero { padding: 60px 32px; }
+  .majalis-hero-content { grid-template-columns: 1fr; gap: 40px; }
+  .majalis-features { flex-direction: row; }
+  .calc-row { flex-direction: row; }
+  .calc-checkboxes { grid-template-columns: repeat(2, 1fr); }
+  .mf-grid { grid-template-columns: repeat(2, 1fr); }
+  .mp-grid { grid-template-columns: 1fr; }
+  .edu-grid { grid-template-columns: repeat(2, 1fr); }
+
+  /* Solar */
+  .hero-split { grid-template-columns: 1fr; padding: 60px 32px; }
+  .hero-features-row { flex-direction: row; }
+  .calc-steps-row { flex-direction: row; }
+  .calc-arrow { transform: none; }
+}
+
+
+/* --------------------------------------------------------------------------
+   4. DESKTOP (1024px - 1439px)
+   -------------------------------------------------------------------------- */
+@media (min-width: 1024px) and (max-width: 1439px) {
+  .pro-container { padding-left: 48px; padding-right: 48px; }
+  .section-head { flex-direction: row; align-items: flex-end; padding: 0 48px; }
+
+  /* Appliances */
+  .appliances-hero { padding: 80px 48px; }
+  .app-categories-grid { grid-template-columns: repeat(4, 1fr); margin: 60px 48px; gap: 24px; }
+  .brands-section { margin: 60px 48px; padding: 40px; }
+  .brands-grid { grid-template-columns: repeat(8, 1fr); }
+  .trust-bar { grid-template-columns: repeat(4, 1fr); padding: 0 48px; }
+
+  /* Bedrooms */
+  .hero-dual-cards { grid-template-columns: repeat(2, 1fr); padding: 48px; gap: 24px; }
+  .image-categories-section { grid-template-columns: repeat(2, 1fr); padding: 60px 48px; gap: 60px; }
+  
+  /* Kitchens */
+  .kitchen-hero { padding: 80px 48px; }
+  .floating-badge { left: 48px; bottom: 48px; }
+  .kitchen-styles, .kitchen-packages { padding: 80px 48px; }
+  .k-style-grid { grid-template-columns: repeat(3, 1fr); }
+  .packages-grid { grid-template-columns: repeat(2, 1fr); gap: 40px; }
+
+  /* Majalis */
+  .majalis-hero { padding: 80px 48px; }
+  .majalis-hero-content { grid-template-columns: 1.5fr 1fr; gap: 60px; }
+  .majalis-features-grid, .majalis-packages, .edu-promo { padding: 80px 48px; }
+  .mf-grid { grid-template-columns: repeat(3, 1fr); }
+  .mp-grid { grid-template-columns: repeat(2, 1fr); }
+  .edu-grid { grid-template-columns: repeat(2, 1fr); }
+
+  /* Solar */
+  .hero-split { grid-template-columns: 1fr 400px; padding: 80px 48px; gap: 60px; }
+}
+
+
+/* --------------------------------------------------------------------------
+   5. LARGE DESKTOP (1440px+)
+   Strict Figma Specs: 1440px container, 720px hero, 58%/42% split, 48px gap
+   -------------------------------------------------------------------------- */
+@media (min-width: 1440px) {
+  .pro-container { max-width: 1440px; margin: 0 auto; padding-left: 0; padding-right: 0; }
+  .section-head { flex-direction: row; align-items: flex-end; max-width: 1440px; margin: 0 auto; padding: 0; }
+
+  .appliances-hero, .kitchen-hero, .majalis-hero, .hero-split {
+    padding-left: calc((100vw - 1440px) / 2);
+    padding-right: calc((100vw - 1440px) / 2);
+    min-height: 720px;
+  }
+  
+  /* Hero Split Layouts */
+  .majalis-hero-content, .hero-split {
+    grid-template-columns: 58% 42%;
+    gap: 48px;
+  }
+  .majalis-text h1, .hero-split-text h1, .appliances-hero-content h1, .kitchen-hero-content h1 { font-size: 64px; line-height: 1.1; }
+  .majalis-text p, .hero-split-text p, .appliances-hero-content p { font-size: 18px; }
+  
+  .btn-hero-primary, .btn-mp, .btn-calc-start { height: 56px; display: inline-flex; align-items: center; justify-content: center; padding: 0 32px; }
+
+  .solar-calculator, .majalis-calc { width: 460px; max-width: 100%; border-radius: 28px; }
+  .mf-card, .mp-card, .pkg-card { border-radius: 28px; }
+
+  /* Appliances */
+  .app-categories-grid { max-width: 1440px; margin: 80px auto; grid-template-columns: repeat(8, 1fr); gap: 24px; }
+  .brands-section { max-width: 1440px; margin: 80px auto; }
+  .brands-grid { grid-template-columns: repeat(8, 1fr); }
+  .trust-bar { max-width: 1440px; margin: 0 auto; grid-template-columns: repeat(4, 1fr); padding: 0; gap: 48px; }
+
+  /* Bedrooms */
+  .hero-dual-cards { max-width: 1440px; margin: 0 auto; padding: 64px 0; grid-template-columns: repeat(2, 1fr); gap: 48px; }
+  .dual-card { min-height: 720px; border-radius: 28px; padding: 64px; }
+  .dual-card h1 { font-size: 64px; }
+  .image-categories-section { max-width: 1440px; margin: 0 auto; padding: 80px 0; grid-template-columns: repeat(2, 1fr); gap: 48px; }
+  .img-cat-photo { aspect-ratio: 4 / 5; height: auto; border-radius: 28px; }
+
+  /* Kitchens */
+  .floating-badge { left: calc((100vw - 1440px) / 2); bottom: 64px; }
+  .kitchen-styles, .kitchen-packages { padding: 100px 0; max-width: 1440px; margin: 0 auto; background: transparent; }
+  .k-style-grid { grid-template-columns: repeat(3, 1fr); gap: 48px; }
+  .k-style-photo { aspect-ratio: 4 / 5; height: auto; border-radius: 28px 28px 0 0; }
+  .packages-grid { grid-template-columns: repeat(2, 1fr); gap: 48px; }
+
+  /* Majalis */
+  .majalis-features-grid, .majalis-packages, .edu-promo { padding: 100px 0; max-width: 1440px; margin: 0 auto; background: transparent; }
+  .mf-grid { grid-template-columns: repeat(3, 1fr); gap: 48px; }
+  .mp-grid { grid-template-columns: repeat(2, 1fr); gap: 48px; }
+  .mp-image { aspect-ratio: 4 / 5; height: auto; }
+  .edu-grid { gap: 48px; }
+  .edu-card { border-radius: 28px; }
+}
+
+
+/* --- Dynamic Product Page Responsive --- */
+@media (max-width: 1024px) {
+    .premium-product-page.dynamic-product .premium-hero.3-cols {
+        grid-template-columns: 1fr 350px;
+        /* Sidebar drops to bottom or disappears, Gallery and Info side by side */
+    }
+    .premium-product-page.dynamic-product .product-sidebar {
+        grid-column: 1 / -1;
+        position: static;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+    }
+}
+@media (max-width: 768px) {
+    .premium-product-page.dynamic-product .premium-hero.3-cols {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+    }
+    /* Reorder for mobile: Breadcrumb -> Gallery -> Info -> Sidebar */
+    .premium-product-page.dynamic-product .premium-gallery {
+        order: -1; /* Puts gallery at the top! */
+    }
+    .premium-product-page.dynamic-product .product-sidebar {
+        grid-template-columns: 1fr;
+    }
+    .trust-row.compact {
+        grid-template-columns: 1fr;
+    }
+    .tabs-header {
+        scrollbar-width: none;
+    }
+    .tabs-header::-webkit-scrollbar {
+        display: none;
+    }
+    .tabs-content {
+        padding: 24px 16px;
+    }
+}
